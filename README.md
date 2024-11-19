@@ -5,4 +5,4 @@
 [![Codecov test coverage](https://codecov.io/gh/KTB2110/bstat625LinReg/graph/badge.svg)](https://app.codecov.io/gh/KTB2110/bstat625LinReg)
 <!-- badges: end -->
 
-q
+
