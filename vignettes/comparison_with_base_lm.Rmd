@@ -13,7 +13,7 @@ This vignette demonstrates how to use the `biost625linreg` package to fit linear
 
 # Data Setup
 
-We will use the `mtcars` dataset to illustrate.
+We will use the `iris` and `mtcars` datasets to illustrate.
 
 ```{r setup, echo=TRUE}
 # Loading required packages
@@ -22,9 +22,54 @@ library(biost625linreg) # My package
 library(bench) # For benchmarking
 
 # Loading the data
+data(iris)
 data(mtcars)
 ```
 
+# Demonstration of package using the `iris` dataset
+
+### Fitting a linear model
+```{r}
+# Fit a linear regression model using biost625linreg with the below code:
+my_model <- linear_regression_fit(Sepal.Length ~ Petal.Length + Petal.Width, iris)
+
+# View the coefficients using:
+print(my_model$coefficients)
+
+print(head(my_model$residuals))
+
+print(my_model$r_squared)
+```
+
+The `linear_regression_fit` function fits a linear regression model and returns the coefficients, residuals, and R-squared value. The coefficients help with making predictions, residuals are beneficial for further analysis like creating a qq plot to understand the dataset better, and R-squared value gives us an idea of how well the model is fitting the data.
+
+
+### Extracting predictions out of fit model
+```{r}
+# Extract predictions using:
+my_predictions <- linear_regression_predict(my_model, iris)
+
+# Display the predictions using:
+head(my_predictions)
+```
+
+The `linear_regression_predict` function allows us to generate predictions for the `Sepal.Length` variable based on the fitted model.
+
+### Evaluating the model
+```{r}
+my_r_squared <- my_model$r_squared
+print(my_r_squared)
+```
+
+This means that the model is fitting fairly well.
+```{r}
+my_rmse <- rmse(iris$Sepal.Length, my_predictions)
+print(my_rmse)
+```
+
+The `rmse` function computes the Root Mean Squared Error, providing insight into model accuracy. A low RMSE score in this case further indicates that the model is able to explain the variance of the dataset well.
+
+# Comparison with Base LM package using the `mtcars` dataset
 ```{r}
 # Fit using biost625linreg
 my_model <- linear_regression_fit(mpg ~ wt + hp, mtcars)
