@@ -1,0 +1,98 @@
+---
+title: "Comparison with Base R's lm()"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparison with Base R's lm()}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+This vignette demonstrates how to use the `biost625linreg` package to fit linear regression models, compares it to base R's `lm()`, and verifies its correctness.
+
+# Data Setup
+
+We will use the `mtcars` dataset for illustration.
+
+```{r setup, echo=TRUE}
+# Loading required packages
+library(biost625linreg) # My package
+
+
+library(bench) # For benchmarking
+
+# Loading the data
+data(mtcars)
+```
+
+```{r}
+# Fit using biost625linreg
+my_model <- linear_regression_fit(mpg ~ wt + hp, mtcars)
+
+# Fit using base R
+base_model <- lm(mpg ~ wt + hp, data = mtcars)
+```
+
+```{r}
+# Coefficients from our package
+my_model$coefficients
+
+# Coefficients from base R
+coef(base_model)
+
+# Check if they are equal
+all.equal(unname(my_model$coefficients), unname(coef(base_model)))
+```
+
+```{r}
+# Predictions using my package
+my_predictions <- linear_regression_predict(my_model, mtcars)
+print("My LM's Predictions:")
+print(my_predictions)
+
+# Predictions using base R
+base_predictions <- predict(base_model, newdata = mtcars)
+print("Base LM's Predictions:")
+print(base_predictions)
+
+# Check if predictions are equal
+all.equal( unname(my_predictions), unname(base_predictions))
+```
+***Still gotta test RMSE and R squared do not forget***
+
+```{r}
+# Compute R-squared using my package
+my_r_squared <- my_model$r_squared
+print("My LM's R-squared:")
+print(my_r_squared)
+
+# Compute R-squared using base R
+base_r_squared <- summary(base_model)$r.squared
+print("Base LM's R-squared:")
+print(base_r_squared)
+
+# Check if R-squared values are equal
+all.equal(my_r_squared, base_r_squared)
+```
+
+```{r}
+# Compute RMSE using my package
+my_rmse <- rmse(mtcars$mpg, my_predictions)
+print("My LM's RMSE:")
+print(my_rmse)
+
+# Compute RMSE manually using base R
+base_rmse <- sqrt(mean((mtcars$mpg - base_predictions)^2))
+print("Base LM's RMSE:")
+print(base_rmse)
+
+# Check if RMSE values are equal
+all.equal(my_rmse, base_rmse)
+```
+```{r}
+bench::mark(
+  biost625linreg = linear_regression_fit(mpg ~ wt + hp, mtcars)$coefficients,
+  base_r = coef(lm(mpg ~ wt + hp, data = mtcars))
+)
+```
