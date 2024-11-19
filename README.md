@@ -7,7 +7,7 @@
 
 # Package name: biost625linreg
 
-## Why I Built This Package
+## Goal of the project
 `biost625linreg` was created for the BIOSTAT625 course. I have tried to code the Linear Regression module from scratch to better understand what is happening in the background mathematically. In this way, I was able to make the functions slightly faster than the `lm` module from the `stat` package.
 
 ## Installation and Loading

@@ -14,28 +14,25 @@
 #' @importFrom stats model.matrix model.response model.frame setNames terms
 #' @export
 linear_regression_fit <- function(formula, data) {
-  # Create the design matrix and response vector
   model_matrix <- model.matrix(formula, data)
   response <- model.response(model.frame(formula, data))
 
-  # Efficient computation of coefficients
+  # Computing coefficients
   xtx <- crossprod(model_matrix)
   xty <- crossprod(model_matrix, response)
   coefficients <- solve(xtx, xty)
 
-  # Add names to coefficients
   coefficients <- setNames(as.vector(coefficients), colnames(model_matrix))
 
-  # Calculate fitted values and residuals
+  # Calculating fitted values and residuals
   fitted_values <- model_matrix %*% coefficients
   residuals <- response - fitted_values
 
-  # Calculate R-squared
+  # Calculating R-squared
   ss_total <- sum((response - mean(response))^2)
   ss_residual <- sum(residuals^2)
   r_squared <- 1 - (ss_residual / ss_total)
 
-  # Create a model object
   model <- list(
     coefficients = coefficients,
     fitted_values = as.vector(fitted_values),
@@ -66,19 +63,15 @@ linear_regression_fit <- function(formula, data) {
 #' @export
 #' Predict using a Linear Regression Model
 linear_regression_predict <- function(model, newdata) {
-  # Ensure the model has the required attributes
   if (is.null(attr(model, "terms"))) stop("The model does not contain terms information.")
 
-  # Extract coefficients
+  # Extracting coefficients
   coefficients <- model$coefficients
 
-  # Recreate the design matrix using the terms attribute
   model_matrix <- model.matrix(delete.response(attr(model, "terms")), newdata)
 
-  # Predict values
   predictions <- model_matrix %*% coefficients
 
-  # Add row names to predictions
   predictions <- setNames(as.vector(predictions), rownames(newdata))
 
   return(predictions)
