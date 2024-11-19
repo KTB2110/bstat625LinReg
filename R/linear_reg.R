@@ -11,6 +11,7 @@
 #' data(mtcars)
 #' model <- linear_regression_fit(mpg ~ wt, mtcars)
 #' model$coefficients
+#' @importFrom stats model.matrix model.response model.frame setNames terms
 #' @export
 linear_regression_fit <- function(formula, data) {
   # Create the design matrix and response vector
@@ -61,6 +62,7 @@ linear_regression_fit <- function(formula, data) {
 #' data(mtcars)
 #' model <- linear_regression_fit(mpg ~ wt, mtcars)
 #' predictions <- linear_regression_predict(model, newdata = mtcars)
+#' @importFrom stats model.matrix delete.response setNames
 #' @export
 #' Predict using a Linear Regression Model
 linear_regression_predict <- function(model, newdata) {
