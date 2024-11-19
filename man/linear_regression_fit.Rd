@@ -2,7 +2,7 @@
 % Please edit documentation in R/linear_reg.R
 \name{linear_regression_fit}
 \alias{linear_regression_fit}
-\title{Fit a Linear Regression Model}
+\title{Fitting a Linear Regression Model}
 \usage{
 linear_regression_fit(formula, data)
 }

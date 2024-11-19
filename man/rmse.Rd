@@ -2,7 +2,7 @@
 % Please edit documentation in R/linear_reg.R
 \name{rmse}
 \alias{rmse}
-\title{Calculate Root Mean Square Error (RMSE)}
+\title{Calculating Root Mean Square Error (RMSE)}
 \usage{
 rmse(actual, predicted)
 }

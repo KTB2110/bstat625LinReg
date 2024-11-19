@@ -2,7 +2,7 @@
 % Please edit documentation in R/linear_reg.R
 \name{linear_regression_predict}
 \alias{linear_regression_predict}
-\title{Predict using a Linear Regression Model}
+\title{Predicting using a Linear Regression Model}
 \usage{
 linear_regression_predict(model, newdata)
 }
