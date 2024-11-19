@@ -13,12 +13,11 @@ This vignette demonstrates how to use the `biost625linreg` package to fit linear
 
 # Data Setup
 
-We will use the `mtcars` dataset for illustration.
+We will use the `mtcars` dataset to illustrate.
 
 ```{r setup, echo=TRUE}
 # Loading required packages
 library(biost625linreg) # My package
-
 
 library(bench) # For benchmarking
 
@@ -35,16 +34,15 @@ base_model <- lm(mpg ~ wt + hp, data = mtcars)
 ```
 
 ```{r}
-# Coefficients from our package
+# Coefficients from my package
 my_model$coefficients
 
 # Coefficients from base R
 coef(base_model)
 
-# Check if they are equal
 all.equal(unname(my_model$coefficients), unname(coef(base_model)))
 ```
-
+Looking at the above output we can see that my linear regression module produces the exact same coefficients as the base lm module.
 ```{r}
 # Predictions using my package
 my_predictions <- linear_regression_predict(my_model, mtcars)
@@ -56,43 +54,53 @@ base_predictions <- predict(base_model, newdata = mtcars)
 print("Base LM's Predictions:")
 print(base_predictions)
 
-# Check if predictions are equal
 all.equal( unname(my_predictions), unname(base_predictions))
 ```
-***Still gotta test RMSE and R squared do not forget***
+Looking at the above output we can see that my linear regression module produces the exact same prediction for each row as the base lm module.
 
 ```{r}
-# Compute R-squared using my package
+# Computing R-squared using my package
 my_r_squared <- my_model$r_squared
 print("My LM's R-squared:")
 print(my_r_squared)
 
-# Compute R-squared using base R
+# Computing R-squared using base R
 base_r_squared <- summary(base_model)$r.squared
 print("Base LM's R-squared:")
 print(base_r_squared)
 
-# Check if R-squared values are equal
 all.equal(my_r_squared, base_r_squared)
 ```
+The r-squared values for both the packages are the same, which indicates that the package is working as expected and is reliable.
 
 ```{r}
-# Compute RMSE using my package
+# Computing RMSE using my package
 my_rmse <- rmse(mtcars$mpg, my_predictions)
 print("My LM's RMSE:")
 print(my_rmse)
 
-# Compute RMSE manually using base R
+# Computing RMSE manually using base R
 base_rmse <- sqrt(mean((mtcars$mpg - base_predictions)^2))
 print("Base LM's RMSE:")
 print(base_rmse)
 
-# Check if RMSE values are equal
 all.equal(my_rmse, base_rmse)
 ```
+The RMSE also seems to be identical between my LM package and the base LM package. 
+
 ```{r}
 bench::mark(
   biost625linreg = linear_regression_fit(mpg ~ wt + hp, mtcars)$coefficients,
   base_r = coef(lm(mpg ~ wt + hp, data = mtcars))
 )
 ```
+The benchmarks show that the fit function from my module is faster than the base lm package. The minimum, median and total runtimes are lower for my function when compared to the lm module from the stat package. 
+
+```{r}
+bench::mark(
+  biost625linreg = linear_regression_predict(my_model, mtcars),
+  base_r = predict(base_model, newdata = mtcars)
+)
+```
+
+It is a similar story for the predict function as my function outperforms the base function in terms of speed.
